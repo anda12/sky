@@ -1,0 +1,91 @@
+﻿@model Sky.ViewModels.UserViewModel
+@using Sky.Common
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/Save.cshtml";
+}
+
+
+
+    @using (Html.BeginForm("Edit", "User", FormMethod.Post, new { id = "form1" }))
+    {
+        @Html.HiddenFor(m => m.UserID)
+        @Html.HiddenFor(m => m.UPassword)
+        
+        @Html.HiddenFor(m => m.CreateUser)
+        @Html.HiddenFor(m => m.CreateTime)
+
+        @Html.HiddenFor(m => m.CUPassword)
+        <table cellpadding="5">
+            <tr>
+                <td>
+                    @Html.LabelFor(m => m.UsID)
+                </td>
+                <td>
+                    @Html.EditorFor(m => m.UsID, new { htmlAttributes = new { @class = "easyui-textbox"  } })
+                    @Html.ValidationMessageFor(m => m.UsID)
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.LabelFor(m => m.Gender)
+                </td>
+                <td>
+                    @Html.DropDownListFor(m => m.Gender, SelectListClass.GetGenders(false) as SelectList, new { htmlAttributes = new { @class = "easyui-combobox" } })
+                    @Html.ValidationMessageFor(m => m.Gender)
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.LabelFor(m => m.UserName)
+                </td>
+                <td>
+                    @Html.EditorFor(m => m.UserName, new { htmlAttributes = new { @class = "easyui-textbox" } })
+                    @Html.ValidationMessageFor(m => m.UserName)
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.LabelFor(m => m.Role)
+                </td>
+                <td>
+                    @if(Model!=null)
+                    {
+                        @Html.CheckBoxListFor(m => m.Role, new SelectList(ViewBag.Roles, "Value", "Text", @Model.Role2Str()), true)
+                    }
+                    @Html.ValidationMessageFor(m => m.Role)
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.LabelFor(m => m.StateFlag, new { htmlAttributes = new { cols = "40" } })
+                </td>
+                <td>
+                    @Html.CheckBoxFor(m => m.StateFlag)
+                    @Html.ValidationMessageFor(m => m.StateFlag)
+                </td>
+            </tr>
+
+            @Html.ValidationSummary(true)
+
+            <tr>
+                <td>
+
+                    <a href='#' onclick='$("#form1").submit()' class="easyui-linkbutton"> 修改 </a>
+                </td>
+                <td>
+                    <a href='#' onclick="javascript:resetData()" class="easyui-linkbutton">重置</a>
+                    <a href='#' onclick="javascript:formClose();" class="easyui-linkbutton">返回</a>
+                </td>
+            </tr>
+        </table>
+
+    }
+
+
+
+
+
+
+

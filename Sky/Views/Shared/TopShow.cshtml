@@ -1,0 +1,55 @@
+﻿@using Sky.ViewModels
+@model Sky.ViewModels.AccountViewModel
+
+
+
+<style>
+    #css3menu li {
+        float: left;
+        list-style-type: none;
+    }
+
+        #css3menu li a {
+            color: #fff;
+            padding-right: 20px;
+        }
+
+            #css3menu li a.active {
+                color: yellow;
+            }
+</style>
+
+
+
+<div data-options="region:'north'" split="true" border="false" style="overflow: hidden; height: 30px;
+        background: url(~/Content/images/layout-browser-hd-bg.gif) #7f99be repeat-x center 50%;
+        line-height: 20px;color: #fff; font-family: Verdana, 微软雅黑,黑体">
+    @if(Model == null)
+    { 
+        <span style="float:right; padding-right:20px;" class="head"> 未知用户 </span>
+        <span style="padding-left:10px; font-size: 16px; float:left;"><img src="~/Content/images/blocks.gif" width="20" height="20" align="absmiddle" /> 未知用户 </span>
+    }
+    else
+    {
+        <span style="float:right; padding-right:20px;" class="head">欢迎 '@Model.UsID' <a href="#" id="editpass">修改密码</a> <a href="#" id="loginOut">安全退出</a></span>
+        <span style="padding-left:10px; font-size: 16px; float:left;"><img src="~/Content/images/blocks.gif" width="20" height="20" align="absmiddle" /> @Model.ss.sysname</span>
+    }
+    
+    
+    <ul id="css3menu" style="padding:0px; margin:0px;list-type:none; float:left; margin-left:40px;">
+        @if (Model != null) 
+        { 
+            for (int i = 0; i < Model.funclist.Count;i++ )
+            {
+                if(i == 0)
+                { 
+                    <li><a class="active" name=@Model.funclist[i] href="javascript:;" title=@Model.funclist[i]>@Model.funclist[i]</a></li>
+                }
+                else
+                {
+                    <li><a name=@Model.funclist[i] href="javascript:;" title=@Model.funclist[i]>@Model.funclist[i]</a></li>
+                }
+            }
+        }
+    </ul>
+</div>

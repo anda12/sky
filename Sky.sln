@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkyUserData", "..\SkyData\SkyUserData.csproj", "{3268278D-7F1D-42EF-82DA-AEF98FF555F4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sky", "Sky\Sky.csproj", "{EEB0B400-806B-40A8-AC47-ACD344CBE49A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LS.BLL", "..\LS.BLL\LS.BLL.csproj", "{68C79175-0530-45F0-AF0B-933A4D009E39}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3268278D-7F1D-42EF-82DA-AEF98FF555F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3268278D-7F1D-42EF-82DA-AEF98FF555F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3268278D-7F1D-42EF-82DA-AEF98FF555F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3268278D-7F1D-42EF-82DA-AEF98FF555F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EEB0B400-806B-40A8-AC47-ACD344CBE49A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEB0B400-806B-40A8-AC47-ACD344CBE49A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEB0B400-806B-40A8-AC47-ACD344CBE49A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEB0B400-806B-40A8-AC47-ACD344CBE49A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68C79175-0530-45F0-AF0B-933A4D009E39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68C79175-0530-45F0-AF0B-933A4D009E39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68C79175-0530-45F0-AF0B-933A4D009E39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68C79175-0530-45F0-AF0B-933A4D009E39}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

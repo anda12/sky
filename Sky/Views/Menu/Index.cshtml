@@ -1,0 +1,153 @@
+﻿@model Sky.ViewModels.MenuViewModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<h2>系统菜单管理</h2>
+<p>管理系统菜单</p>
+<div style="margin:20px 0;"></div>
+<table id="tt"
+       class="easyui-datagrid"
+       title="基础菜单列表"
+       style="width:auto;height:auto"
+       pagination="true"
+       nowrap="false"
+       data-options="rownumbers:true,singleSelect:true,url:'/Menu/GetData',method:'get',toolbar:'#tb',onLoadSuccess:initIcon">
+    <thead>
+        <tr>
+            <th data-options="field:'ck', checkbox:true">
+            <th data-options="field:'MenuID',width:80">菜单ID</th>
+            <th data-options="field:'Name',width:160">菜单名称</th>
+            <th data-options="field:'ParentID',width:80">父菜单ID</th>
+            <th data-options="field:'URL',width:80,align:'right'">网址</th>
+            <th data-options="field:'Iconic',width:100,align:'center',hidden:true">图标1</th>
+            <th data-options="field:'icons',width:100,align:'center',formatter:showImg">图标</th>
+            <th data-options="field:'IsLeaf',width:100,align:'center'">是否叶子节点</th>
+            <th data-options="field:'FunctionStr',width:100,align:'center'">所属系统</th>
+            <th data-options="field:'RolesStr',width:100,align:'center'">所属角色</th>
+            <th data-options="field:'OpersStr',width:100,align:'center'">允许操作</th>
+            <th data-options="field:'Remark',width:100,align:'center'">备注</th>
+
+        </tr>
+    </thead>
+</table>
+<div id="tb" style="padding:5px;height:auto">
+    <div style="margin-bottom:5px">
+        @foreach (var ovm in ViewBag.MenuOpers)
+        {
+            <a href="#" id=@ovm.EventName class="easyui-linkbutton" iconcls=@ovm.Iconic plain="true">@ovm.OperName</a>
+        }
+    </div>
+    <div>
+        菜单ID: <input id="MenuID" style="line-height:26px;width:80px;border:1px solid #ccc">
+        菜单状态:
+        <select id="StateFlag" class="easyui-combobox"
+                style="width:80px"
+                data-options="rownumbers:true,singleSelect:true, valueField: 'Value', textField: 'Text', url:'/Menu/GetState',method:'get'"></select>
+        角色: <input id="RoleName" style="line-height:26px;width:80px;border:1px solid #ccc">
+        子系统: <input id="FuncName" style="line-height:26px;width:80px;border:1px solid #ccc">
+        <a href="#" class="easyui-linkbutton" id="search" iconcls="icon-search">Search</a>
+    </div>
+</div>
+<div id="myWindow">
+</div>
+<script>
+    function showImg(value, row, index) {
+        if (row.Iconic) {
+            return "<a id='" + row.Iconic + "'></a>";
+        }
+    }
+    function initIcon(data) {
+        if (data) {
+            var rows = data.rows;
+            for (var i = 0; i < rows.length; i++) {
+                var code = rows[i].Iconic;
+                var code1 = code.split('_');
+                var bt = $("#" + code);
+                bt.linkbutton({
+                    width: 90,
+                    plain: true,
+                    iconCls: code1[0]
+                });
+            }
+        }
+    }
+
+    function doSearch() {
+        $('#tt').datagrid('reload', {
+            MenuID: $('#MenuID').val(),
+            StateFlag: $('#StateFlag').combobox('getValue'),
+            FuncName: $('#FuncName').val(),
+            RoleName: $('#RoleName').val()
+        });
+    }
+
+
+
+    function doRemove() {
+
+        var rows = $('#tt').datagrid('getSelections');
+        if (rows.length == 0) {
+            $.messager.alert('操作提示', '请选择数据!', 'warning');
+            return false;
+        }
+        $.messager.confirm('操作提示', "确认删除 " + rows[0].Name + " 这项吗？", function (r) {
+            if (r) {
+                $.post("/Menu/Delete/" + rows[0].MenuID, "", function (res) {
+                    if (res == "OK") {
+                        //移除删除的数据
+                        $("#tt").datagrid("reload");
+                        $("#tt").datagrid("clearSelections");
+                        $.messager.alert('操作提示', '删除成功!', 'info');
+                    }
+                    else {
+                        if (res == "") {
+                            $.messager.alert('操作提示', '删除失败!请查看该数据与其他模块下的信息的关联，或联系管理员。', 'info');
+                        }
+                        else {
+                            $.messager.alert('操作提示', res, 'info');
+                        }
+                    }
+                });
+            }
+        });
+
+    }
+
+    $(function () {
+
+        $('#search').click(function () {
+            //$('#w').window('open');
+            doSearch();
+        });
+
+        $('#add').click(function () {
+            //$('#w').window('open');
+            showWindow("增加菜单", "/Menu/Create", 726, 500);
+        });
+
+        $('#remove').click(function () {
+            //$('#w').window('open');
+            doRemove();
+        });
+
+        $('#edit').click(function () {
+            //$('#w').window('open');
+            var arr = $('#tt').datagrid('getSelections');
+            if (arr.length == 1) {
+                showWindow("修改菜单", "/Menu/Edit/" + arr[0].MenuID, 726, 500);
+
+            } else {
+                $.messager.alert('操作提示', '请选择一条数据!', 'warning');
+            }
+            return false;
+        });
+    }
+    )
+</script>
+
+
+

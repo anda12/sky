@@ -1,0 +1,23 @@
+﻿@using Sky.ViewModels
+@model Sky.ViewModels.UserMenuViewModel
+
+<script type="text/javascript">
+    $(function () {
+        var ads = '@Model.ToString()';
+        var reg = new RegExp("&quot;", "g");
+        //alert(ads);
+        _menus = JSON.parse(ads.replace(reg, '"'))
+        //alert(_menus);
+        mmuu(_menus);
+
+    })
+</script>
+
+<div region="west" hide="true" split="true" title="导航菜单" style="width:180px;" id="west">
+    <div id='wnav' class="easyui-accordion" fit="true" border="false">
+        <!--  导航内容 -->
+
+    </div>
+
+</div>
+

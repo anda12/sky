@@ -1,0 +1,149 @@
+﻿@model Sky.ViewModels.OperateViewModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>系统操作管理</h2>
+<p>管理支持的所有操作</p>
+<div style="margin:20px 0;"></div>
+<table id="tt"
+       class="easyui-datagrid"
+       title="系统操作列表"
+       style="width:auto;height:auto"
+       pagination="true"
+       nowrap="false"
+       data-options="rownumbers:true,singleSelect:true,url:'/Operate/GetData',method:'get',toolbar:'#tb',onLoadSuccess:initIcon">
+    <thead>
+        <tr>
+            <th data-options="field:'ck', checkbox:true">
+            <th data-options="field:'OperID',width:80">操作ID</th>
+            <th data-options="field:'OperCode',width:160">操作编码</th>
+            <th data-options="field:'OperName',width:80">操作名称</th>
+            <th data-options="field:'EventName',width:80,align:'right'">事件名称</th>
+            <th data-options="field:'Iconic',width:100,align:'center',hidden:true">图标1</th>
+            <th data-options="field:'icons',width:100,align:'center',formatter:showImg">图标</th>
+            <th data-options="field:'StatusStr',width:100,align:'center'">状态</th>
+
+        </tr>
+    </thead>
+</table>
+<div id="tb" style="padding:5px;height:auto">
+    <div style="margin-bottom:5px">
+        <a href="#" id="add" class="easyui-linkbutton" iconcls="icon-add" plain="true"></a>
+        <a href="#" id="edit" class="easyui-linkbutton" iconcls="icon-edit" plain="true"></a>
+        <a href="#" id="remove" class="easyui-linkbutton" iconcls="icon-remove" plain="true"></a>
+    </div>
+    <div>
+        OperID: <input id="OperID" style="line-height:26px;width:80px;border:1px solid #ccc">
+        操作状态:
+        <select id="StateFlag" class="easyui-combobox"
+                style="width:80px"
+                data-options="rownumbers:true,singleSelect:true, valueField: 'Value', textField: 'Text', url:'/Operate/GetState',method:'get'"></select>
+        <a href="#" class="easyui-linkbutton" id="search" iconcls="icon-search">Search</a>
+    </div>
+</div>
+<div id="myWindow">
+</div>
+<script>
+    function showImg(value, row, index) {
+        if (row.Iconic) {
+            return "<a id='" + row.Iconic + "'></a>";
+        }
+    }
+    function initIcon(data) {
+        if (data) {
+            var rows = data.rows;
+            for (var i = 0; i < rows.length; i++) {
+                var code = rows[i].Iconic;
+                var code1 = code.split('_');
+                var bt = $("#" + code);
+                bt.linkbutton({
+                    width: 90,
+                    plain: true,
+                    iconCls: code1[0]
+                });
+            }
+        }
+    }
+
+    function doSearch() {
+        $('#tt').datagrid('reload', {
+            OperID: $('#OperID').val(),
+            StateFlag: $('#StateFlag').combobox('getValue'),
+        });
+    }
+
+    function doAdd()
+    {
+        showWindow("增加菜单", "/Operate/Create", 726, 500);
+    }
+
+    function doEdit()
+    {
+        var arr = $('#tt').datagrid('getSelections');
+        if (arr.length == 1) {
+            showWindow("修改菜单", "/Operate/Edit/" + arr[0].OperID, 726, 500);
+
+        } else {
+            $.messager.alert('操作提示', '请选择一条数据!', 'warning');
+        }
+        return false;
+    }
+
+    function doRemove() {
+
+        var rows = $('#tt').datagrid('getSelections');
+        if (rows.length == 0) {
+            $.messager.alert('操作提示', '请选择数据!', 'warning');
+            return false;
+        }
+        $.messager.confirm('操作提示', "确认删除 " + rows[0].Name + " 这项吗？", function (r) {
+            if (r) {
+                $.post("/Operate/Delete/" + rows[0].OperID, "", function (res) {
+                    if (res == "OK") {
+                        //移除删除的数据
+                        $("#tt").datagrid("reload");
+                        $("#tt").datagrid("clearSelections");
+                        $.messager.alert('操作提示', '删除成功!', 'info');
+                    }
+                    else {
+                        if (res == "") {
+                            $.messager.alert('操作提示', '删除失败!请查看该数据与其他模块下的信息的关联，或联系管理员。', 'info');
+                        }
+                        else {
+                            $.messager.alert('操作提示', res, 'info');
+                        }
+                    }
+                });
+            }
+        });
+
+    }
+
+    $(function () {
+
+        $('#search').click(function () {
+            //$('#w').window('open');
+            doSearch();
+        });
+
+        $('#add').click(function () {
+            //$('#w').window('open');
+            doAdd();
+        });
+
+        $('#remove').click(function () {
+            //$('#w').window('open');
+            doRemove();
+        });
+
+        $('#edit').click(function () {
+            //$('#w').window('open');
+            doEdit();
+        });
+    }
+    )
+</script>
+

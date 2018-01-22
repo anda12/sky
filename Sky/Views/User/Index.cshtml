@@ -1,0 +1,81 @@
+﻿@model Sky.ViewModels.UserViewModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>用户信息管理</h2>
+<p>管理系统中的用户.</p>
+<div style="margin:20px 0;"></div>
+<table id="tt"
+       class="easyui-datagrid"
+       title="用户数据列表"
+       style="width:auto;height:auto"
+       pagination="true"
+       data-options="rownumbers:true,singleSelect:true,url:'/User/GetData',method:'get',toolbar:'#tb'">
+    <thead>
+        <tr>
+            <th data-options="field:'UserID',width:80">用户ID</th>
+            <th data-options="field:'UsID',width:100">登录名</th>
+            <th data-options="field:'Gender',width:80,align:'right'">性别</th>
+            <th data-options="field:'StateFlag',width:80,align:'right'">用户状态</th>
+            <th data-options="field:'CreateUser',width:60,align:'center'">创建者</th>
+            <th data-options="field:'CreateTime',width:60,align:'center'">创建时间</th>
+        </tr>
+    </thead>
+</table>
+<div id="tb" style="padding:5px;height:auto">
+    <div style="margin-bottom:5px">
+        <a href="#" id="add" class="easyui-linkbutton" iconcls="icon-add" plain="true"></a>
+        <a href="#" id="edit" class="easyui-linkbutton" iconcls="icon-edit" plain="true"></a>
+        <a href="#" id="remove" class="easyui-linkbutton" iconcls="icon-remove" plain="true"></a>
+    </div>
+    <div>
+        用户ID: <input id="Uid" style="line-height:26px;width:80px;border:1px solid #ccc">
+        用户名: <input id="Uname" style="line-height:26px;width:80px;border:1px solid #ccc">
+        用户状态:
+        <select id="Ustate" class="easyui-combobox" 
+                style="width:80px"
+                data-options="rownumbers:true,singleSelect:true, valueField: 'Value', textField: 'Text', url:'/User/GetState',method:'get'"></select>
+        创建者ID: <input id="UCreater" style="line-height:26px;width:80px;border:1px solid #ccc">
+        <a href="#" class="easyui-linkbutton" id="search" iconcls="icon-search" >Search</a>
+    </div>
+</div>
+<div id="myWindow">
+</div>
+<script>
+    function doSearch() {
+		$('#tt').datagrid('reload',{
+		    Uid: $('#Uid').val(),
+		    Ustate: $('#Ustate').combobox('getValue'),
+		    UCreater: $('#UCreater').val(),
+		    Uname: $('#Uname').val()
+		});
+    }
+
+
+
+    function doRemove() {
+
+    }
+
+    $(function () {
+        
+        $('#search').click(function () {
+            //$('#w').window('open');
+            doSearch();
+        });
+
+        $('#add').click(function () {
+            //$('#w').window('open');
+            showWindow("增加用户", "/User/AddUser", 600, 400);
+        });
+
+        $('#remove').click(function () {
+            //$('#w').window('open');
+            doRemove();
+        });
+    }
+    )
+</script>

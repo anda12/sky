@@ -1,0 +1,127 @@
+﻿@model Sky.ViewModels.RoleViewModel
+@using Sky.Common
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>角色信息管理</h2>
+<p>管理系统中的角色.</p>
+<div style="margin:20px 0;"></div>
+<table id="tt"
+       class="easyui-datagrid"
+       title="用户数据列表"
+       style="width:auto;height:auto"
+       pagination="true"
+       nowrap="false"
+       data-options="rownumbers:true,singleSelect:true,url:'/Role/GetData',method:'get',toolbar:'#tb'">
+    <thead>
+        <tr>
+            <th data-options="field:'ck', checkbox:true">
+            <th data-options="field:'RoldID',width:80">角色ID</th>
+            <th data-options="field:'RoleName',width:100">角色名</th>
+            <th data-options="field:'StateFlagStr',width:80,align:'right'">角色状态</th>
+            <th data-options="field:'CreateUser',width:100,align:'center'">创建者</th>
+            <th data-options="field:'CreateTime',width:200,align:'center'">创建时间</th>
+            <th data-options="field:'FuncsStr',width:200,align:'center'">所属系统</th>
+            <th data-options="field:'MenusStr',width:200,align:'center' ">相关菜单</th>
+            <th data-options="field:'OpersStr',width:200,align:'center' ">相关操作</th>
+            <th data-options="field:'Remark',width:200,align:'center'">备注</th>
+        </tr>
+    </thead>
+</table>
+<div id="tb" style="padding:5px;height:auto">
+    <div style="margin-bottom:5px">
+        @foreach (var ovm in ViewBag.RoleOpers)
+        {
+            <a href="#" id=@ovm.EventName class="easyui-linkbutton" iconcls=@ovm.Iconic plain="true">@ovm.OperName</a>
+        }
+    </div>
+    <div>
+        角色ID: <input id="RoldID" style="line-height:26px;width:80px;border:1px solid #ccc">
+        角色名: <input id="RoleName" style="line-height:26px;width:80px;border:1px solid #ccc">
+        角色状态:
+        <select id="StateFlag" class="easyui-combobox"
+                style="width:80px"
+                data-options="rownumbers:true,singleSelect:true, valueField: 'Value', textField: 'Text', url:'/Role/GetState',method:'get'"></select>
+        创建者ID: <input id="CreateUser" style="line-height:26px;width:80px;border:1px solid #ccc">
+        <a href="#" class="easyui-linkbutton" id="search" iconcls="icon-search">Search</a>
+    </div>
+</div>
+<div id="myWindow">
+</div>
+<script>
+    function doSearch() {
+        $('#tt').datagrid('reload', {
+            RoldID: $('#RoldID').val(),
+            StateFlag: $('#StateFlag').combobox('getValue'),
+            RoleName: $('#RoleName').val(),
+            CreateUser: $('#CreateUser').val()
+        });
+    }
+
+
+
+    function doRemove() {
+
+        var rows = $('#tt').datagrid('getSelections');
+        if (rows.length == 0) {
+            $.messager.alert('操作提示', '请选择数据!', 'warning');
+            return false;
+        }
+        $.messager.confirm('操作提示', "确认删除 " + rows[0].RoleName + " 这项吗？", function (r) {
+            if (r) {
+                $.post("/Role/Delete/" + rows[0].RoldID, "", function (res) {
+                    if (res == "OK") {
+                        //移除删除的数据
+                        $("#tt").datagrid("reload");
+                        $("#tt").datagrid("clearSelections");
+                        $.messager.alert('操作提示', '删除成功!', 'info');
+                    }
+                    else {
+                        if (res == "") {
+                            $.messager.alert('操作提示', '删除失败!请查看该数据与其他模块下的信息的关联，或联系管理员。', 'info');
+                        }
+                        else {
+                            $.messager.alert('操作提示', res, 'info');
+                        }
+                    }
+                });
+            }
+        });
+
+    }
+
+    $(function () {
+
+        $('#search').click(function () {
+            //$('#w').window('open');
+            doSearch();
+        });
+
+        $('#add').click(function () {
+            //$('#w').window('open');
+            showWindow("增加角色", "/Role/Create", 800, 600);
+        });
+
+        $('#remove').click(function () {
+            //$('#w').window('open');
+            doRemove();
+        });
+
+        $('#edit').click(function () {
+            //$('#w').window('open');
+            var arr = $('#tt').datagrid('getSelections');
+            if (arr.length == 1) {
+                showWindow("修改角色", "/Role/Edit/" + arr[0].RoldID, 800, 600);
+
+            } else {
+                $.messager.alert('操作提示', '请选择一条数据!', 'warning');
+            }
+            return false;
+        });
+    }
+    )
+</script>
+

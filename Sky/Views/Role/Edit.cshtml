@@ -1,0 +1,116 @@
+﻿@model Sky.ViewModels.RoleViewModel
+@using Sky.Common
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/Save.cshtml";
+}
+
+
+
+    @using (Html.BeginForm("Edit", "Role", FormMethod.Post, new { id = "form1" }))
+    {
+        @Html.HiddenFor(m => m.CreateUser)
+        @Html.HiddenFor(m => m.CreateTime)
+        @Html.HiddenFor(m => m.RoldID)
+        <table cellpadding="5">
+            <tr>
+                <td width="15%">
+                    @Html.LabelFor(m => m.RoleName)
+                </td>
+                <td width="85%">
+                    @Html.EditorFor(m => m.RoleName, new { htmlAttributes = new { @class = "easyui-textbox" }, @Value = @Model.RoleName })
+                    @Html.ValidationMessageFor(m => m.RoleName)
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    @Html.LabelFor(m => m.Remark)
+                </td>
+                <td>
+                    @Html.EditorFor(m => m.Remark, new { htmlAttributes = new { @class = "easyui-textbox" }, @Value=@Model.Remark })
+                    @Html.ValidationMessageFor(m => m.Remark)
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    @Html.LabelFor(m => m.Funcs)
+                </td>
+                <td>
+                    @Html.CheckBoxListFor(m => m.Funcs, new SelectList(ViewBag.Funcs, "Value", "Text", @Model.Funcs2Str()), true)
+
+                    @Html.ValidationMessageFor(m => m.Funcs)
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    @Html.LabelFor(m => m.Menus)
+                </td>
+                <td>
+                    @Html.CheckBoxListFor(m => m.Menus, new SelectList(ViewBag.Menus, "Value", "Text", @Model.Menus2Str()), true)
+
+                    @Html.ValidationMessageFor(m => m.Menus)
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    @Html.LabelFor(m => m.Opers)
+                </td>
+                <td>
+                    @if (Model != null)
+                    {
+                        @Html.CheckBoxListFor(m => m.Opers, new SelectList(ViewBag.Opers, "Value", "Text", @Model.Opers2Str()), true)
+                    }
+                    @Html.ValidationMessageFor(m => m.Opers)
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    @Html.LabelFor(m => m.Users)
+                </td>
+                <td>
+                    @if (Model != null)
+                    {
+                        @Html.CheckBoxListFor(m => m.Users, new SelectList(ViewBag.Users, "Value", "Text", @Model.Users2Str()), true)
+                    }
+                    @Html.ValidationMessageFor(m => m.Users)
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    @Html.LabelFor(m => m.StateFlag)
+                </td>
+                <td>
+                    @Html.DropDownListFor(m => m.StateFlag, SelectListClass.GetStatus(false) as SelectList, new { htmlAttributes = new { @class = "easyui-combobox" } })
+                    @Html.ValidationMessageFor(m => m.StateFlag)
+                </td>
+            </tr>
+
+            @Html.ValidationSummary(true)
+
+            <tr>
+                <td>
+
+                    <a href='#' onclick='$("#form1").submit()' class="easyui-linkbutton"> 保存 </a>
+                </td>
+                <td>
+                    <a href='#' onclick="javascript:resetData()" class="easyui-linkbutton">重置</a>
+                    <a href='#' onclick="javascript:formClose();" class="easyui-linkbutton">返回</a>
+                </td>
+            </tr>
+        </table>
+
+    }
+
+
+
+
+
+
+

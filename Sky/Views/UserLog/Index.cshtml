@@ -1,0 +1,66 @@
+﻿@model Sky.ViewModels.UserLogViewModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>用户操作日志</h2>
+<p>系统的操作记录.</p>
+<div style="margin:20px 0;"></div>
+
+<table id="tt"
+       class="easyui-datagrid"
+       style="width:auto;height:500px"
+       url="/UserLog/GetData"
+       toolbar="#tb"
+       title="Load Data"
+       iconcls="icon-save"
+       rownumbers="true"
+       pagination="true"
+       
+       >
+    <thead>
+        <tr>
+            <th field="LogID" width="80">日志ID</th>
+            <th field="LogDatetime" width="160">日志时间</th>
+            <th field="UserID" width="80" align="right">操作人员ID</th>
+            <th field="OperationType" width="80" align="right">操作类型</th>
+            <th field="ImportanceDegree" width="80" align="right">重要等级</th>
+            <th field="ClassName" width="300" align="right">操作类名</th>
+            <th field="FuncCode" width="80" align="right">功能编码</th>
+            <th field="Remark" width="240" align="right">备注</th>
+        </tr>
+    </thead>
+</table>
+
+<div id="tb" style="padding:3px">
+    <span>操作人员ID:</span>
+    <input id="UserID" style="line-height:26px;width:80px;border:1px solid #ccc">
+    <span>操作类型:</span>
+    <select class="easyui-combobox" id="OperationType" style="width:100px;height:auto">
+        <option value="all">all</option>
+        <option value="U">edit</option>
+        <option value="N">add</option>
+        <option value="D">delete</option>
+    </select>
+    <span>系统编码:</span>
+    <input id="SystemCode" style="line-height:26px;width:80px;border:1px solid #ccc">
+    <span>起始时间:</span>
+    <input id="StartTime" class="easyui-datebox" data-options="sharedCalendar:'#cc'">
+    <span>结束时间:</span>
+    <input id="EndTime" class="easyui-datebox" data-options="sharedCalendar:'#cc'">
+    <a href="#" class="easyui-linkbutton" plain="true" onclick="doSearch()">Search</a>
+</div>
+<div id="cc" class="easyui-calendar"></div>
+<script>
+    function doSearch() {
+		$('#tt').datagrid('reload',{
+		    UserID: $('#UserID').val(),
+		    OperationType: $('#OperationType').combobox('getValue'),
+		    StartTime: $('#StartTime').datebox("getValue"),
+		    EndTime: $('#EndTime').datebox("getValue"),
+		    SystemCode: $('#SystemCode').val()
+		});
+	}
+</script>

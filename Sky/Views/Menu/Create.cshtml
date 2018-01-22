@@ -1,0 +1,226 @@
+﻿@model Sky.ViewModels.MenuViewModel
+@using Sky.Common
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/Save.cshtml";
+}
+
+@using (Html.BeginForm("Create", "Menu", FormMethod.Post, new { id = "form1" }))
+{
+    <table cellpadding="5">
+
+        <tr>
+            <td>
+                @Html.LabelFor(m => m.Name)
+            </td>
+            <td>
+                @Html.EditorFor(m => m.Name, new { htmlAttributes = new { @class = "easyui-textbox" } })
+                @Html.ValidationMessageFor(m => m.Name)
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                @Html.LabelFor(m => m.URL)
+            </td>
+            <td>
+                @Html.EditorFor(m => m.URL, new { htmlAttributes = new { @class = "easyui-textbox" } })
+                @Html.ValidationMessageFor(m => m.URL)
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <a class="anUnderLine" onclick="MyWindow('选择图标', '/Home/Iconic');">
+                    @Html.LabelFor(model => model.Iconic)
+                </a>
+            </td>
+            <td>
+                <div id="Icon">
+                </div>
+                @Html.HiddenFor(model => model.Iconic)
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                @Html.LabelFor(m => m.Sort)
+            </td>
+            <td>
+                @Html.EditorFor(m => m.Sort, new { htmlAttributes = new { @class = "easyui-textbox" } })
+                @Html.ValidationMessageFor(m => m.Sort)
+            </td>
+        </tr>
+        <tr>
+            <td>
+                @Html.LabelFor(m => m.Remark)
+            </td>
+            <td>
+                @Html.EditorFor(m => m.Remark, new { htmlAttributes = new { @class = "easyui-textbox" } })
+                @Html.ValidationMessageFor(m => m.Remark)
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                @Html.LabelFor(m => m.IsLeaf, new { htmlAttributes = new { cols = "40" } })
+            </td>
+            <td>
+                @Html.DropDownListFor(m => m.IsLeaf, @SelectListClass.GetYesOrNo(true), true)
+                @Html.ValidationMessageFor(m => m.IsLeaf)
+            </td>
+        </tr>
+
+            <tr>
+                <td>
+                    @Html.LabelFor(m => m.ParentID, new { htmlAttributes = new { cols = "40" } })
+                </td>
+                <td>
+                    @Html.DropDownListFor(m => m.ParentID, @ViewBag.Parents as SelectList, true)
+                    @Html.ValidationMessageFor(m => m.ParentID)
+                </td>
+            </tr>
+
+
+        <tr>
+            <td>
+                @Html.LabelFor(m => m.Roles)
+            </td>
+            <td>
+                @Html.CheckBoxListFor(m => m.Roles, new SelectList(ViewBag.Roles, "Value", "Text", null), true)
+
+                @Html.ValidationMessageFor(m => m.Roles)
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                @Html.LabelFor(m => m.Function)
+            </td>
+            <td>
+                @Html.CheckBoxListFor(m => m.Function, new SelectList(ViewBag.Funcs, "Value", "Text", null), true)
+
+                @Html.ValidationMessageFor(m => m.Function)
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                @Html.LabelFor(m => m.Opers)
+            </td>
+            <td>
+                @Html.CheckBoxListFor(m => m.Opers, new SelectList(ViewBag.Opers, "Value", "Text", null), true)
+
+                @Html.ValidationMessageFor(m => m.Opers)
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                @Html.LabelFor(m => m.StateFlag, new { htmlAttributes = new { cols = "40" } })
+            </td>
+            <td>
+                @Html.DropDownListFor(m => m.StateFlag, @SelectListClass.GetStatus(true), true)
+                @Html.ValidationMessageFor(m => m.StateFlag)
+            </td>
+        </tr>
+
+        @Html.ValidationSummary(true)
+
+        <tr>
+            <td>
+
+                <a href='#' onclick='$("#form1").submit()' class="easyui-linkbutton"> 增加 </a>
+            </td>
+            <td>
+                <a href='#' onclick="javascript:resetData()" class="easyui-linkbutton">重置</a>
+                <a href='#' onclick="javascript:formClose();" class="easyui-linkbutton">返回</a>
+            </td>
+        </tr>
+    </table>
+
+}
+
+
+
+
+<div id="myWin">
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        function tu(tuclass) {
+            $('#Icon').panel({
+                title:"是您选择的图标",
+                iconCls: tuclass,
+                width:120
+            });
+            $('#Iconic').val(tuclass);
+
+            $('#myWin').window('close');
+        }
+        function MyWindow(title, href, width, height, modal, minimizable, maximizable) {
+
+            var icons = "";
+            var flag = 19.6;
+            for (var i = 1; i <= 26; i++) {
+                var i0 = i < 10 ? "0" + i : i;
+                for (var j = 1; j <= 20; j++) {
+                    var j0 = j < 10 ? "0" + j : j;
+                    icons += '<area shape="rect" coords="' + (j - 1) * flag + ',' + (i - 1) * flag + ',' + j * flag + ',' + i * flag + '" style="cursor:pointer"  onclick="tu(\'tu' + j0 + i0 + '\')" />';
+                }
+            }
+            var ta = $('<div title="请选择图标"> <img src="/Content/images/tabicons.gif" width="396" height="516" border="0" usemap="#Map" /><map name="Map" id="Map">' + icons + '</map></div>');
+            $('#myWin').window({
+                title: title,
+                width: width === undefined ? 423 : width,
+                height: height === undefined ? 559 : height,
+                content: ta,
+                modal: modal === undefined ? true : modal,
+                minimizable: minimizable === undefined ? false : minimizable,
+                maximizable: maximizable === undefined ? false : maximizable,
+                shadow: false,
+                cache: false,
+                collapsible: false,
+                resizable: false,
+                inline: true,
+                draggable: true,
+                closable: true,
+                loadingMessage: '正在加载数据，请稍等片刻......'
+            });
+
+        }
+
+
+        $(document).ready(function () {                //根据选择的职位类别，动态获取下属职位名称
+            $("#IsLeaf").change(function () {
+                if ($("#IsLeaf").val() == "0")
+                {
+                    $('#ParentID').empty();
+                    $("#ParentID").append("<option value=''>--------无法选择--------</option>");
+                }
+                else if($("#IsLeaf").val() == "1")
+                {
+                    $('#ParentID').empty();
+                    $("#ParentID").append("<option value=''>--------请选择--------</option>")
+                    $.getJSON(
+                                '/Menu/GetJson',
+                                function (data) {
+                                    $.each(data, function (i, item) {
+                                        $("#ParentID").append("<option value='" + item.Value + "'>" + item.Text + "</option>");
+                                    })
+                                });
+                }
+                //alert(url);
+            });
+        });
+
+
+    </script>
+}
+
+
+
+
+

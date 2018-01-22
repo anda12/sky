@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+     @Styles.Render("~/Content/themes/default/easyui.css")
+     @Styles.Render("~/Content/themes/icon.css")
+     @Styles.Render("~/Content/sky/easyuiExt.css")
+</head>
+<body>
+    @RenderBody()
+    @*  @Scripts.Render("~/bundles/easyui")*@
+
+    @Scripts.Render("~/bundles/easyui")
+    @Scripts.Render("~/bundles/jscookie")
+    @Scripts.Render("~/bundles/jqueryval")
+    @RenderSection("scripts", required: false)
+</body>
+<script type='text/javascript'>
+    var win = "#myWindow";
+    function ajaxFrom(form, url) {
+        $.ajax({
+            url: url,
+            type: "Post",
+            data: $(form).serialize(),
+            dataType: "json",
+            success: function (data) {
+                if ($.messager) {
+                    $.messager.defaults.ok = '继续';
+                    $.messager.defaults.cancel = '取消';
+
+                    $.messager.confirm('操作提示', data, function (r) {
+                        if (!r) {
+                            parent.$(win).window('close');
+                            parent.doSearch();
+                        }
+                    });
+                }
+            }
+            
+        });
+    }
+
+    $(function () {
+        $("form").submit(function (form) {
+            var v = $("form").form('validate');
+            if (v) {
+                ajaxFrom(this, this.action);
+            }
+            return false;
+        });
+    });
+    $.extend($.fn.validatebox.defaults.rules, {
+        /*必须和某个字段相等*/
+        equalTo: {
+            validator: function (value, param) {
+                return $(param[0]).val() == value;
+            },
+            message: '字段不匹配'
+        }
+
+    });
+    function formClose() {
+        parent.$(win).window('close');
+        //parent.flexiQuery();
+    }
+    function resetData() {
+        document.getElementById("form1").reset();
+    }
+</script>
+</html>

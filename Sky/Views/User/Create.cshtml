@@ -1,0 +1,103 @@
+﻿@model Sky.ViewModels.UserViewModel
+@using Sky.Common
+
+@{
+    Layout = "~/Views/Shared/Save.cshtml";
+}
+
+
+
+
+                        @using (Html.BeginForm("Create", "User", FormMethod.Post, new { id = "form1" }))
+                        {
+                            <table cellpadding="5">
+
+                                <tr>
+                                    <td>
+                                        @Html.LabelFor(m => m.UsID)
+                                    </td>
+                                    <td>
+                                        @Html.EditorFor(m => m.UsID, new { htmlAttributes = new { @class = "easyui-textbox" } })
+                                        @Html.ValidationMessageFor(m => m.UsID)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        @Html.LabelFor(m => m.UPassword)
+                                    </td>
+                                    <td>
+                                        @Html.PasswordFor(m => m.UPassword)
+                                        @Html.ValidationMessageFor(m => m.UPassword)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        @Html.LabelFor(m => m.CUPassword)
+                                    </td>
+                                    <td>
+                                        @Html.PasswordFor(m => m.CUPassword)
+                                        @Html.ValidationMessageFor(m => m.CUPassword)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        @Html.LabelFor(m => m.Gender)
+                                    </td>
+                                    <td>
+                                        @Html.DropDownListFor(m => m.Gender, ViewBag.Genders as SelectList, new { htmlAttributes = new { @class = "easyui-combobox" } })
+                                        @Html.ValidationMessageFor(m => m.Gender)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        @Html.LabelFor(m => m.UserName)
+                                    </td>
+                                    <td>
+                                        @Html.EditorFor(m => m.UserName, new { htmlAttributes = new { @class = "easyui-textbox" } })
+                                        @Html.ValidationMessageFor(m => m.UserName)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        @Html.LabelFor(m => m.Role)
+                                    </td>
+                                    <td>
+                                        @Html.CheckBoxListFor(m => m.Role, new SelectList(ViewBag.Roles, "Value", "Text", null), true)
+
+                                        @Html.ValidationMessageFor(m => m.Role)
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        @Html.LabelFor(m => m.StateFlag, new { htmlAttributes = new { cols = "40" } })
+                                    </td>
+                                    <td>
+                                        @Html.CheckBoxFor(m => m.StateFlag)
+                                        @Html.ValidationMessageFor(m => m.StateFlag)
+                                    </td>
+                                </tr>
+
+                                    @Html.ValidationSummary(true)
+                                
+                                <tr>
+                                    <td>
+                                
+                                        <a href='#' onclick='$("#form1").submit()' class="easyui-linkbutton" > 增加 </a>
+                                    </td>
+                                    <td>
+                                        <a href='#' onclick="javascript:resetData()" class="easyui-linkbutton" >重置</a>
+                                        <a href='#' onclick="javascript:formClose();" class="easyui-linkbutton" >返回</a>
+                                    </td>
+                                    </tr>
+                            </table>
+
+                        }
+
+
+
+
+
+
+
+

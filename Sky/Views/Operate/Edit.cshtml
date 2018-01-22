@@ -1,0 +1,167 @@
+﻿@model Sky.ViewModels.OperateViewModel
+@using Sky.Common
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/Save.cshtml";
+}
+
+@using (Html.BeginForm("Edit", "Operate", FormMethod.Post, new { id = "form1" }))
+{
+    @Html.HiddenFor(m=>m.OperID)
+    <table cellpadding="5">
+
+        <tr>
+            <td>
+                @Html.LabelFor(m => m.OperName)
+            </td>
+            <td>
+                @Html.EditorFor(m => m.OperName, new { htmlAttributes = new { @class = "easyui-textbox" } })
+                @Html.ValidationMessageFor(m => m.OperName)
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                @Html.LabelFor(m => m.OperCode)
+            </td>
+            <td>
+                @Html.EditorFor(m => m.OperCode, new { htmlAttributes = new { @class = "easyui-textbox" } })
+                @Html.ValidationMessageFor(m => m.OperCode)
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <a class="anUnderLine" onclick="MyWindow('选择图标', '/Home/Iconic');">
+                    @Html.LabelFor(model => model.Iconic)
+                </a>
+            </td>
+            <td>
+                @if (Model != null)
+                {
+                    <div id="Icon" class="easyui-panel" data-options="iconCls:'@Model.Iconic',title:'是您选择的图标',width:120 ">
+                    </div>
+                }
+                @Html.HiddenFor(model => model.Iconic)
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                @Html.LabelFor(m => m.EventName)
+            </td>
+            <td>
+                @Html.EditorFor(m => m.EventName, new { htmlAttributes = new { @class = "easyui-textbox" } })
+                @Html.ValidationMessageFor(m => m.EventName)
+            </td>
+        </tr>
+
+
+        <tr>
+            <td>
+                @Html.LabelFor(m => m.Status, new { htmlAttributes = new { cols = "40" } })
+            </td>
+            <td>
+                @Html.DropDownListFor(m => m.Status, @SelectListClass.GetStatus(true), true)
+                @Html.ValidationMessageFor(m => m.Status)
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                @Html.LabelFor(m => m.Roles)
+            </td>
+            <td>
+                @if(Model != null)
+                { 
+                    @Html.CheckBoxListFor(m => m.Roles, new SelectList(ViewBag.Roles, "Value", "Text", @Model.Roles2Str()), true)
+                }
+                @Html.ValidationMessageFor(m => m.Roles)
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                @Html.LabelFor(m => m.Menus)
+            </td>
+            <td>
+                @if(Model != null)
+                {
+                    @Html.CheckBoxListFor(m => m.Menus, new SelectList(ViewBag.Menus, "Value", "Text", @Model.Menus2Str()), true)
+                }
+
+                @Html.ValidationMessageFor(m => m.Menus)
+            </td>
+        </tr>
+
+        @Html.ValidationSummary(true)
+
+        <tr>
+            <td>
+                <a href='#' onclick='$("#form1").submit()' class="easyui-linkbutton"> 保存 </a>
+            </td>
+            <td>
+                <a href='#' onclick="javascript:resetData()" class="easyui-linkbutton">重置</a>
+                <a href='#' onclick="javascript:formClose();" class="easyui-linkbutton">返回</a>
+            </td>
+        </tr>
+    </table>
+
+}
+
+
+
+
+<div id="myWin">
+</div>
+
+@section scripts{
+    <script type="text/javascript">
+        function tu(tuclass) {
+            $('#Icon').panel({
+                title:"是您选择的图标",
+                iconCls: tuclass,
+                width:120
+            });
+            $('#Iconic').val(tuclass);
+
+            $('#myWin').window('close');
+        }
+        function MyWindow(title, href, width, height, modal, minimizable, maximizable) {
+
+            var icons = "";
+            var flag = 19.6;
+            for (var i = 1; i <= 26; i++) {
+                var i0 = i < 10 ? "0" + i : i;
+                for (var j = 1; j <= 20; j++) {
+                    var j0 = j < 10 ? "0" + j : j;
+                    icons += '<area shape="rect" coords="' + (j - 1) * flag + ',' + (i - 1) * flag + ',' + j * flag + ',' + i * flag + '" style="cursor:pointer"  onclick="tu(\'tu' + j0 + i0 + '\')" />';
+                }
+            }
+            var ta = $('<div title="请选择图标"> <img src="/Content/images/tabicons.gif" width="396" height="516" border="0" usemap="#Map" /><map name="Map" id="Map">' + icons + '</map></div>');
+            $('#myWin').window({
+                title: title,
+                width: width === undefined ? 423 : width,
+                height: height === undefined ? 559 : height,
+                content: ta,
+                modal: modal === undefined ? true : modal,
+                minimizable: minimizable === undefined ? false : minimizable,
+                maximizable: maximizable === undefined ? false : maximizable,
+                shadow: false,
+                cache: false,
+                collapsible: false,
+                resizable: false,
+                inline: true,
+                draggable: true,
+                closable: true,
+                loadingMessage: '正在加载数据，请稍等片刻......'
+            });
+
+        }
+    </script>
+}
+
+
+
+

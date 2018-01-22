@@ -1,0 +1,121 @@
+﻿@model Sky.ViewModels.UserViewModel
+@using Sky.ViewModels
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>用户信息管理</h2>
+<p>管理系统中的用户.</p>
+<div style="margin:20px 0;"></div>
+<table id="tt"
+       class="easyui-datagrid"
+       title="用户数据列表"
+       style="width:auto;height:auto"
+       pagination="true"
+       data-options="rownumbers:true,singleSelect:true,url:'/User/GetData',method:'get',toolbar:'#tb'">
+    <thead>
+        <tr>
+            <th data-options="field:'ck', checkbox:true">
+            <th data-options="field:'UserID',width:80">用户ID</th>
+            <th data-options="field:'UsID',width:100">登录名</th>
+            <th data-options="field:'Gender',width:80,align:'right'">性别</th>
+            <th data-options="field:'StateFlags',width:80,align:'right'">用户状态</th>
+            <th data-options="field:'Roles',width:240,align:'center'">用户角色</th>
+            <th data-options="field:'CreateUser',width:100,align:'center'">创建者</th>
+            <th data-options="field:'CreateTime',width:200,align:'center'">创建时间</th>
+
+        </tr>
+    </thead>
+</table>
+<div id="tb" style="padding:5px;height:auto">
+    <div style="margin-bottom:5px">
+        @foreach (var ovm in ViewBag.UserOpers)
+        {
+            <a href="#" id=@ovm.EventName class="easyui-linkbutton" iconcls=@ovm.Iconic plain="true">@ovm.OperName</a>
+        }
+    </div>
+    <div>
+        用户ID: <input id="UserID" style="line-height:26px;width:80px;border:1px solid #ccc">
+        用户名: <input id="UsID" style="line-height:26px;width:80px;border:1px solid #ccc">
+        用户状态:
+        <select id="StateFlag" class="easyui-combobox"
+                style="width:80px"
+                data-options="rownumbers:true,singleSelect:true, valueField: 'Value', textField: 'Text', url:'/User/GetState',method:'get'"></select>
+        创建者ID: <input id="CreateUser" style="line-height:26px;width:80px;border:1px solid #ccc">
+        <a href="#" class="easyui-linkbutton" id="search" iconcls="icon-search">Search</a>
+    </div>
+</div>
+<div id="myWindow">
+</div>
+<script>
+    function doSearch() {
+        $('#tt').datagrid('reload', {
+            UserID: $('#UserID').val(),
+            StateFlag: $('#StateFlag').combobox('getValue'),
+            CreateUser: $('#CreateUser').val(),
+            UsID: $('#UsID').val()
+        });
+    }
+
+    function doRemove() {
+
+        var rows = $('#tt').datagrid('getSelections');
+        if (rows.length == 0) {
+            $.messager.alert('操作提示', '请选择数据!', 'warning');
+            return false;
+        }
+        $.messager.confirm('操作提示', "确认删除 " + rows[0].UsID + " 这项吗？", function (r) {
+            if (r) {
+                $.post("/User/Delete/" + rows[0].UserID, "", function (res) {
+                    if (res == "OK") {
+                        //移除删除的数据
+                        $("#tt").datagrid("reload");
+                        $("#tt").datagrid("clearSelections");
+                        $.messager.alert('操作提示', '删除成功!', 'info');
+                    }
+                    else {
+                        if (res == "") {
+                            $.messager.alert('操作提示', '删除失败!请查看该数据与其他模块下的信息的关联，或联系管理员。', 'info');
+                        }
+                        else {
+                            $.messager.alert('操作提示', res, 'info');
+                        }
+                    }
+                });
+            }
+        });
+
+    }
+
+    $(function () {
+
+        $('#search').click(function () {
+            //$('#w').window('open');
+            doSearch();
+        });
+
+        $('#add').click(function () {
+            //$('#w').window('open');
+            showWindow("增加用户", "/User/Create", 600, 400);
+        });
+
+        $('#remove').click(function () {
+            //$('#w').window('open');
+            doRemove();
+        });
+
+        $('#edit').click(function () {
+            //$('#w').window('open');
+            var arr = $('#tt').datagrid('getSelections');
+            if (arr.length == 1) {
+                showWindow("修改用户", "/User/Edit/" + arr[0].UserID, 726, 366);
+
+            } else {
+                $.messager.alert('操作提示', '请选择一条数据!', 'warning');
+            }
+            return false;
+        });
+    }
+    )
+</script>

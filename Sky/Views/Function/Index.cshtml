@@ -1,0 +1,124 @@
+﻿@model Sky.ViewModels.FunctionViewModel
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>子系统管理</h2>
+<p>管理子系统.</p>
+<div style="margin:20px 0;"></div>
+<table id="tt"
+       class="easyui-datagrid"
+       title="用户数据列表"
+       style="width:auto;height:auto"
+       pagination="true"
+       nowrap="false"
+       data-options="rownumbers:true,singleSelect:true,url:'/Function/GetData',method:'get',toolbar:'#tb'">
+    <thead>
+        <tr>
+            <th data-options="field:'ck', checkbox:true">
+            <th data-options="field:'FuncID',width:80">子系统ID</th>
+            <th data-options="field:'FuncCode',width:100">子系统编码</th>
+            <th data-options="field:'FuncName',width:100">子系统名称</th>
+            <th data-options="field:'StateFlagStr',width:80,align:'right'">子系统状态</th>
+            <th data-options="field:'System',width:100,align:'center'">系统名称</th>
+            <th data-options="field:'RolesStr',width:200,align:'center'">相关角色</th>
+            <th data-options="field:'MenusStr',width:300,align:'center'">相关菜单</th>
+        </tr>
+    </thead>
+</table>
+<div id="tb" style="padding:5px;height:auto">
+    <div style="margin-bottom:5px">
+        @foreach (var ovm in ViewBag.FuncOpers)
+        {
+            <a href="#" id=@ovm.EventName class="easyui-linkbutton" iconcls=@ovm.Iconic plain="true">@ovm.OperName</a>
+        }
+    </div>
+    <div>
+        子系统ID: <input id="FuncID" style="line-height:26px;width:80px;border:1px solid #ccc">
+        子系统状态:
+        <select id="StateFlag" class="easyui-combobox"
+                style="width:80px"
+                data-options="rownumbers:true,singleSelect:true, valueField: 'Value', textField: 'Text', url:'/Function/GetState',method:'get'"></select>
+        子系统名称: <input id="FuncName" style="line-height:26px;width:80px;border:1px solid #ccc">
+        <a href="#" class="easyui-linkbutton" id="search" iconcls="icon-search">Search</a>
+    </div>
+</div>
+<div id="myWindow">
+</div>
+<script>
+    function doSearch() {
+        $('#tt').datagrid('reload', {
+            FuncID: $('#FuncID').val(),
+            StateFlag: $('#StateFlag').combobox('getValue'),
+            FuncName: $('#FuncName').val()
+        });
+    }
+
+
+
+    function doRemove() {
+
+        var rows = $('#tt').datagrid('getSelections');
+        if (rows.length == 0) {
+            $.messager.alert('操作提示', '请选择数据!', 'warning');
+            return false;
+        }
+        $.messager.confirm('操作提示', "确认删除 " + rows[0].FuncName + " 这项吗？", function (r) {
+            if (r) {
+                $.post("/Function/Delete/" + rows[0].FuncID, "", function (res) {
+                    if (res == "OK") {
+                        //移除删除的数据
+                        $("#tt").datagrid("reload");
+                        $("#tt").datagrid("clearSelections");
+                        $.messager.alert('操作提示', '删除成功!', 'info');
+                    }
+                    else {
+                        if (res == "") {
+                            $.messager.alert('操作提示', '删除失败!请查看该数据与其他模块下的信息的关联，或联系管理员。', 'info');
+                        }
+                        else {
+                            $.messager.alert('操作提示', res, 'info');
+                        }
+                    }
+                });
+            }
+        });
+
+    }
+
+    $(function () {
+
+        $('#search').click(function () {
+            //$('#w').window('open');
+            doSearch();
+        });
+
+        $('#add').click(function () {
+            //$('#w').window('open');
+            showWindow("增加子系统", "/Function/Create", 726, 500);
+        });
+
+        $('#remove').click(function () {
+            //$('#w').window('open');
+            doRemove();
+        });
+
+        $('#edit').click(function () {
+            //$('#w').window('open');
+            var arr = $('#tt').datagrid('getSelections');
+            if (arr.length == 1) {
+                showWindow("修改子系统", "/Function/Edit/" + arr[0].FuncID, 726, 500);
+
+            } else {
+                $.messager.alert('操作提示', '请选择一条数据!', 'warning');
+            }
+            return false;
+        });
+    }
+    )
+</script>
+
+
+
